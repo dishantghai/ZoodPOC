@@ -15,4 +15,5 @@
         android:background="@drawable/textview"
         android:text="sample"
         android:textColor="#000" />
+
 </LinearLayout>

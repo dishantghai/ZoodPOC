@@ -17,11 +17,28 @@ public class ChatMessage {
 
     public String message;
 
+    public String getSender_name() {
+        return sender_name;
+    }
+
+    public void setSender_name(String sender_name) {
+        this.sender_name = sender_name;
+    }
+
+    public String sender_name;
+
 
     public ChatMessage(boolean rightSide, String message) {
         super();
         this.rightSide = rightSide;
         this.message = message;
+    }
+
+    public ChatMessage(boolean rightSide, String message, String sender_name) {
+        super();
+        this.rightSide = rightSide;
+        this.message = message;
+        this.sender_name = sender_name;
     }
 
     public ChatMessage(String message) {

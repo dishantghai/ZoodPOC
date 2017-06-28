@@ -67,6 +67,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case 0:
                 LeftViewHolder leftViewHolder = (LeftViewHolder) holder;
                 leftViewHolder.message.setText(chatMessage.getMessage());
+
                 break;
             case 2:
                 RightViewHolder rightViewHolder = (RightViewHolder) holder;

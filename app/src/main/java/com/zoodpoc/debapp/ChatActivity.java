@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -42,6 +43,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
     private String msgId;
+    private ImageView mImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_chat);
 
         queryEditText = (EditText) findViewById(R.id.textQuery);
+        mImageView = (ImageView) findViewById(R.id.image);
 
         findViewById(R.id.buttonSend).setOnClickListener(this);
 
@@ -58,6 +61,25 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         mFirebaseDatabase = mFirebaseInstance.getReference("msg_table_debate");
 
+      /*  FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://hackathon-firebase-99.appspot.com").child("aayupdfikbimnimxjegf.jpg");
+
+
+        try {
+            final File localFile = File.createTempFile("images", "jpg");
+            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    mImageView.setImageBitmap(bitmap);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                }
+            });
+        } catch (IOException e ) {}*/
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
@@ -83,10 +105,17 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 User user = dataSnapshot.getValue(User.class);
                 if(user.payload!=null) {
                     String message = user.getPayload();
-                    chatMessage = new ChatMessage(false, message);
-                    msgList.add(chatMessage);
-                    mAdapter.notifyDataSetChanged();
+                    Boolean is_for = user.getIs_for();
+                    if(is_for!=null) {
+                        if (is_for) {
+                            chatMessage = new ChatMessage(false, message);
+                        } else {
+                            chatMessage = new ChatMessage(true, message);
+                        }
 
+                        msgList.add(chatMessage);
+                        mAdapter.notifyDataSetChanged();
+                    }
 
                 }
                 // String userName = map.get("user").toString();
@@ -141,11 +170,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         final String queryString = String.valueOf(queryEditText.getText());
 
-            createUser(queryString, "Pooja");
+            createUser("Pooja : " + queryString, "Pooja");
 
-        chatMessage = new ChatMessage(true, queryString);
+        /*chatMessage = new ChatMessage(true, queryString);
         msgList.add(chatMessage);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();*/
         clearEditText(queryEditText);
 
 
@@ -189,11 +218,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         String media_type = "text";
         String media_url = " ";
         String msg_id = "123";
-        String send_time = "34234";
+        String send_time = String.valueOf(System.currentTimeMillis());
         String sender_uid = "002";
 
         User user = new User(is_for, is_media, media_type, media_url, msg_id, payload, sender_name, send_time, sender_uid);
       //  User user = new User(payload, sender_name);
+
 
         mUserRef.setValue(user);
 
