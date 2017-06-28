@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView txtDetails;
     private EditText inputName, inputEmail;
     private Button btnSave;
-    private DatabaseReference mFirebaseDatabase;
+    private DatabaseReference mFirebaseDatabase, mFirebaseMessages;
     private FirebaseDatabase mFirebaseInstance;
     private String userId;
 
@@ -44,10 +44,10 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseDatabase = mFirebaseInstance.getReference("msg_table_debate");
 
         // store app title to 'app_title' node
-        mFirebaseInstance.getReference("sender_name").setValue("Realtime Database");
+        //mFirebaseDatabase.getReference("sender_name").setValue("Realtime Database");
 
         // app_title change listener
-        mFirebaseInstance.getReference("sender_name").addValueEventListener(new ValueEventListener() {
+       /* mFirebaseInstance.getReference("sender_name").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.e(TAG, "App title updated");
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 // Failed to read value
                 Log.e(TAG, "Failed to read app title value.", error.toException());
             }
-        });
+        });*/
 
         // Save / update the user
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void addUserChangeListener() {
         // User data change listener
-        mFirebaseDatabase.child(userId).addValueEventListener(new ValueEventListener() {
+        mFirebaseDatabase.child("message_id").child("sender_name").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
